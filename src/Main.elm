@@ -46,13 +46,13 @@ init =
 
 
 type Msg
-    = InputChange String
+    = SearchInputChange String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        InputChange content ->
+        SearchInputChange content ->
             case content of
                 "" ->
                     { model | searchTerm = Nothing }
@@ -68,7 +68,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ onInput InputChange ] []
+        [ input [ onInput SearchInputChange ] []
         , renderItems model.items model.searchTerm
         ]
 
