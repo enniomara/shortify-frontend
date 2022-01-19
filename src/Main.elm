@@ -61,10 +61,15 @@ view : Items -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
-        , ul []
-            (List.map renderItem model)
+        , renderItems model
         , button [ onClick Increment ] [ text "+" ]
         ]
+
+
+renderItems : Items -> Html Msg
+renderItems items =
+    ul []
+        (List.map renderItem items)
 
 
 renderItem : Item -> Html Msg
