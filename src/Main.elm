@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, li, text, ul)
+import Html exposing (Html, button, div, input, li, text, ul)
 import Html.Attributes exposing (href)
 import Html.Events exposing (onClick)
 
@@ -19,7 +19,7 @@ main =
 
 
 type alias Model =
-    { items : Items }
+    { items : Items, searchTerm : Maybe String }
 
 
 type alias Item =
@@ -37,6 +37,7 @@ init =
         , { name = "pomodoro" }
         , { name = "shortify-gh" }
         ]
+    , searchTerm = Nothing
     }
 
 
@@ -53,10 +54,10 @@ update : Msg -> Model -> Model
 update msg _ =
     case msg of
         Increment ->
-            { items = [ { name = "hej" }, { name = "ho" } ] }
+            { items = [ { name = "hej" }, { name = "ho" } ], searchTerm = Nothing }
 
         Decrement ->
-            { items = [ { name = "nej" }, { name = "nejjj" } ] }
+            { items = [ { name = "nej" }, { name = "nejjj" } ], searchTerm = Nothing }
 
 
 
@@ -67,15 +68,31 @@ view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
-        , renderItems model.items
+        , input [] []
+        , renderItems model.items model.searchTerm
         , button [ onClick Increment ] [ text "+" ]
         ]
 
 
-renderItems : Items -> Html Msg
-renderItems items =
+renderItems : Items -> Maybe String -> Html Msg
+renderItems items searchTerm =
     ul []
         (List.map renderItem items)
+
+
+matchSearchTerm : Maybe String -> Items -> Items
+matchSearchTerm searchTerm items =
+    case searchTerm of
+        Nothing ->
+            items
+
+        Just term ->
+            List.filter (contains term) items
+
+
+contains : String -> Item -> Bool
+contains searchTerm item =
+    String.contains searchTerm item.name
 
 
 renderItem : Item -> Html Msg
