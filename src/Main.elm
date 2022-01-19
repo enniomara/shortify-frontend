@@ -77,7 +77,7 @@ view model =
 renderItems : Items -> Maybe String -> Html Msg
 renderItems items searchTerm =
     ul []
-        (List.map renderItem items)
+        (List.map renderItem (matchSearchTerm searchTerm items))
 
 
 matchSearchTerm : Maybe String -> Items -> Items
