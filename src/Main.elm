@@ -18,6 +18,10 @@ main =
 -- MODEL
 
 
+type alias Model =
+    { items : Items }
+
+
 type alias Item =
     { name : String }
 
@@ -26,12 +30,14 @@ type alias Items =
     List Item
 
 
-init : Items
+init : Model
 init =
-    [ { name = "hn" }
-    , { name = "pomodoro" }
-    , { name = "shortify-gh" }
-    ]
+    { items =
+        [ { name = "hn" }
+        , { name = "pomodoro" }
+        , { name = "shortify-gh" }
+        ]
+    }
 
 
 
@@ -43,25 +49,25 @@ type Msg
     | Decrement
 
 
-update : Msg -> Items -> Items
+update : Msg -> Model -> Model
 update msg _ =
     case msg of
         Increment ->
-            [ { name = "hej" }, { name = "ho" } ]
+            { items = [ { name = "hej" }, { name = "ho" } ] }
 
         Decrement ->
-            [ { name = "nej" }, { name = "nejjj" } ]
+            { items = [ { name = "nej" }, { name = "nejjj" } ] }
 
 
 
 -- VIEW
 
 
-view : Items -> Html Msg
+view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
-        , renderItems model
+        , renderItems model.items
         , button [ onClick Increment ] [ text "+" ]
         ]
 
