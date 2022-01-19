@@ -1,9 +1,9 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, input, li, text, ul)
+import Html exposing (Html, div, input, li, text, ul)
 import Html.Attributes exposing (href)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onInput)
 
 
 
@@ -46,20 +46,12 @@ init =
 
 
 type Msg
-    = Increment
-    | Decrement
-    | InputChange String
+    = InputChange String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            { items = [ { name = "hej" }, { name = "ho" } ], searchTerm = Nothing }
-
-        Decrement ->
-            { items = [ { name = "nej" }, { name = "nejjj" } ], searchTerm = Nothing }
-
         InputChange content ->
             case content of
                 "" ->
@@ -76,10 +68,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , input [ onInput InputChange ] []
+        [ input [ onInput InputChange ] []
         , renderItems model.items model.searchTerm
-        , button [ onClick Increment ] [ text "+" ]
         ]
 
 
