@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, li, text, ul)
+import Html.Attributes exposing (href)
 import Html.Events exposing (onClick)
 
 
@@ -86,4 +87,7 @@ view model =
 renderItem : Item -> Html Msg
 renderItem item =
     li []
-        [ text item.name ]
+        [ Html.a
+            [ href "https://google.com" ]
+            [ text item.name ]
+        ]
