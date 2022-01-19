@@ -90,8 +90,8 @@ matchSearchTerm searchTerm items =
 
 
 contains : String -> Item -> Bool
-contains searchTerm item =
-    String.contains searchTerm item.name
+contains searchTerm =
+    String.contains searchTerm << .name
 
 
 renderItem : Item -> Html Msg
