@@ -18,10 +18,6 @@ main =
 -- MODEL
 
 
-type alias Model =
-    Int
-
-
 type alias Item =
     { name : String }
 
@@ -57,16 +53,6 @@ update msg _ =
             [ { name = "nej" }, { name = "nejjj" } ]
 
 
-listFirstItem : Maybe Item -> String
-listFirstItem mItem =
-    case mItem of
-        Just item ->
-            item.name
-
-        Nothing ->
-            "nothing"
-
-
 
 -- VIEW
 
@@ -77,9 +63,6 @@ view model =
         [ button [ onClick Decrement ] [ text "-" ]
         , ul []
             (List.map renderItem model)
-
-        -- [ text (listFirstItem <| List.head model)
-        -- ]
         , button [ onClick Increment ] [ text "+" ]
         ]
 
