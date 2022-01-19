@@ -4,5 +4,6 @@
     nativeBuildInputs = [
         pkgs.elmPackages.elm-live
         pkgs.elmPackages.elm
+        pkgs.elmPackages.elm-test
     ];
 }
