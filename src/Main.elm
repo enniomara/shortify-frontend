@@ -88,6 +88,6 @@ renderItem : Item -> Html Msg
 renderItem item =
     li []
         [ Html.a
-            [ href "https://google.com" ]
+            [ href <| String.concat [ "https://sh.mara.se/", item.name ] ]
             [ text item.name ]
         ]
