@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, div, input, li, text, ul)
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (href, autofocus)
 import Html.Events exposing (onInput)
 
 
@@ -68,7 +68,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ onInput SearchInputChange ] []
+        [ input [ onInput SearchInputChange, autofocus True ] []
         , renderItems model.items model.searchTerm
         ]
 
