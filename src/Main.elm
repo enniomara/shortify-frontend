@@ -61,7 +61,12 @@ update msg model =
             { items = [ { name = "nej" }, { name = "nejjj" } ], searchTerm = Nothing }
 
         InputChange content ->
-            { model | searchTerm = Just content }
+            case content of
+                "" ->
+                    { model | searchTerm = Nothing }
+
+                _ ->
+                    { model | searchTerm = Just content }
 
 
 
