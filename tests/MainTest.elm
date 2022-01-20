@@ -20,4 +20,16 @@ filterItems =
                     |> List.length
                     |> Expect.equal 2
             )
+        , test "same item when needle is empty"
+            (\_ ->
+                let
+                    items =
+                        [ Item "hn", Item "shortify", Item "pomodoro" ]
+                in
+                items
+                    -- Matches shortify and pomodoro
+                    |> Main.filter Nothing
+                    |> List.length
+                    |> Expect.equal 3
+            )
         ]
