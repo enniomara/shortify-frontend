@@ -5,5 +5,7 @@
         pkgs.elmPackages.elm-live
         pkgs.elmPackages.elm
         pkgs.elmPackages.elm-test
+
+        pkgs.nodePackages.json-server
     ];
 }
