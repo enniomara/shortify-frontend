@@ -34,4 +34,24 @@ filterItems =
                         |> Expect.equal 3
                 )
             ]
+        , describe "contains tests"
+            [ test "should contain with empty needle"
+                (\_ ->
+                    Item "pomodoro"
+                        |> Main.contains ""
+                        |> Expect.equal True
+                )
+            , test "should contain with substring"
+                (\_ ->
+                    Item "pomodoro"
+                        |> Main.contains "omo"
+                        |> Expect.equal True
+                )
+            , test "should not contain with random needle"
+                (\_ ->
+                    Item "pomodoro"
+                        |> Main.contains "other"
+                        |> Expect.equal False
+                )
+            ]
         ]
