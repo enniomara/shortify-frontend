@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, div, input, li, text, ul)
-import Html.Attributes exposing (href, autofocus)
+import Html.Attributes exposing (autofocus, href)
 import Html.Events exposing (onInput)
 
 
@@ -11,7 +11,17 @@ import Html.Events exposing (onInput)
 
 
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 
 
@@ -30,15 +40,17 @@ type alias Items =
     List Item
 
 
-init : Model
-init =
-    { items =
-        [ { name = "hn" }
-        , { name = "pomodoro" }
-        , { name = "shortify-gh" }
-        ]
-    , searchTerm = Nothing
-    }
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( { items =
+            [ { name = "hn" }
+            , { name = "pomodoro" }
+            , { name = "shortify-gh" }
+            ]
+      , searchTerm = Nothing
+      }
+    , Cmd.none
+    )
 
 
 
@@ -49,16 +61,16 @@ type Msg
     = SearchInputChange String
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchInputChange content ->
             case content of
                 "" ->
-                    { model | searchTerm = Nothing }
+                    ( { model | searchTerm = Nothing }, Cmd.none )
 
                 _ ->
-                    { model | searchTerm = Just content }
+                    ( { model | searchTerm = Just content }, Cmd.none )
 
 
 
