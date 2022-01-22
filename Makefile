@@ -1,4 +1,4 @@
-.PHONY: shell start server
+.PHONY: shell start server build
 
 shell:
 	nix-shell --command zsh
@@ -8,3 +8,7 @@ start:
 
 server:
 	json-server data.js
+
+build:
+	elm make src/Main.elm --output dist/elm.js
+	cp index.html dist/index.html
