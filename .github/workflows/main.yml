@@ -13,11 +13,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Install nix
-        uses: cachix/install-nix-action@v16
-
-      - name: Build
-        run: nix-shell --run "make build"
+      - uses: jorelali/setup-elm@v3
+        with:
+          elm-version: 0.19.1
+        run: make build
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
