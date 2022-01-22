@@ -59,16 +59,6 @@ init _ =
     )
 
 
-itemsDecoder : D.Decoder Items
-itemsDecoder =
-    D.list itemDecoder
-
-
-itemDecoder : D.Decoder Item
-itemDecoder =
-    D.map Item (D.field "name" D.string)
-
-
 
 -- UPDATE
 
@@ -116,6 +106,19 @@ renderItems items searchTerm =
         (List.map renderItem (filter searchTerm items))
 
 
+renderItem : Item -> Html Msg
+renderItem item =
+    li []
+        [ Html.a
+            [ href <| String.concat [ "https://sh.mara.se/", item.name ] ]
+            [ text item.name ]
+        ]
+
+
+
+-- UTILS
+
+
 filter : Maybe String -> Items -> Items
 filter searchTerm items =
     case searchTerm of
@@ -131,10 +134,11 @@ contains searchTerm =
     String.contains searchTerm << String.toLower << .name
 
 
-renderItem : Item -> Html Msg
-renderItem item =
-    li []
-        [ Html.a
-            [ href <| String.concat [ "https://sh.mara.se/", item.name ] ]
-            [ text item.name ]
-        ]
+itemsDecoder : D.Decoder Items
+itemsDecoder =
+    D.list itemDecoder
+
+
+itemDecoder : D.Decoder Item
+itemDecoder =
+    D.map Item (D.field "name" D.string)
