@@ -127,7 +127,7 @@ filter searchTerm items =
 
 contains : String -> Item -> Bool
 contains searchTerm =
-    String.contains searchTerm << .name
+    String.contains searchTerm << String.toLower << .name
 
 
 renderItem : Item -> Html Msg
