@@ -13,8 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Install nix
+        uses: cachix/install-nix-action@v16
+
       - name: Build
-        run: make build
+        run: nix-shell --run "make build"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
