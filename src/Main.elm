@@ -4,6 +4,8 @@ import Browser
 import Html exposing (Html, div, input, li, text, ul)
 import Html.Attributes exposing (autofocus, href)
 import Html.Events exposing (onInput)
+import Http
+import Json.Decode as D
 
 
 
@@ -49,8 +51,21 @@ init _ =
             ]
       , searchTerm = Nothing
       }
-    , Cmd.none
+    , Http.get
+        { url = "http://localhost:3000/entries"
+        , expect = Http.expectJson LoadedItems itemsDecoder
+        }
     )
+
+
+itemsDecoder : D.Decoder Items
+itemsDecoder =
+    D.list itemDecoder
+
+
+itemDecoder : D.Decoder Item
+itemDecoder =
+    D.map Item (D.field "name" D.string)
 
 
 
@@ -59,6 +74,7 @@ init _ =
 
 type Msg
     = SearchInputChange String
+    | LoadedItems (Result Http.Error Items)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -71,6 +87,14 @@ update msg model =
 
                 _ ->
                     ( { model | searchTerm = Just content }, Cmd.none )
+
+        LoadedItems result ->
+            case result of
+                Ok items ->
+                    ( { model | items = items }, Cmd.none )
+
+                Err _ ->
+                    Debug.todo "Handle error"
 
 
 
