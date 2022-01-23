@@ -14,7 +14,8 @@
     <script>
       var app = Elm.Main.init({
         node: document.querySelector("main"),
-        flags: { endpoint: "http://localhost:3000" },
+        // set on build time
+        flags: { endpoint: "%API_ENDPOINT%" },
       });
       // you can use ports and stuff here
     </script>
