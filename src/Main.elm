@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import Config
 import Html exposing (Html, div, input, li, text, ul)
 import Html.Attributes exposing (autofocus, href)
 import Html.Events exposing (onInput)
@@ -36,7 +37,7 @@ subscriptions _ =
 type alias Model =
     { items : Items
     , searchTerm : Maybe String
-    , config : Config
+    , config : Config.Config
     }
 
 
@@ -48,13 +49,11 @@ type alias Items =
     List Item
 
 
-type alias Config =
-    { endpoint : String }
-
 
 init : E.Value -> ( Model, Cmd Msg )
 init flags =
-    case D.decodeValue configDecoder flags of
+    case Config.parseConfig flags of
+        -- case D.decodeValue configDecoder flags of
         Ok config ->
             ( { items =
                     [ { name = "hn" }
@@ -65,18 +64,13 @@ init flags =
               , config = config
               }
             , Http.get
-                { url = Url.Builder.crossOrigin config.endpoint [ "_entries" ] []
+                { url = Url.Builder.crossOrigin (Config.endpoint config) [ "_entries" ] []
                 , expect = Http.expectJson LoadedItems itemsDecoder
                 }
             )
 
         Err status ->
             Debug.todo <| D.errorToString status
-
-
-configDecoder : D.Decoder Config
-configDecoder =
-    D.map Config (D.field "endpoint" D.string)
 
 
 
