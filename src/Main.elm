@@ -49,7 +49,6 @@ type alias Items =
     List Item
 
 
-
 init : E.Value -> ( Model, Cmd Msg )
 init flags =
     case Config.parseConfig flags of
