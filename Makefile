@@ -4,7 +4,8 @@ shell:
 	nix-shell --command zsh
 
 start:
-	elm-live src/Main.elm -- --debug --output elm.js
+	cp index.html dist/index.html
+	elm-live src/Main.elm --dir dist -- --debug --output dist/elm.js
 
 server:
 	json-server data.js
