@@ -7,9 +7,9 @@
 
 let faker = require('faker')
 module.exports = () => {
-    const data = { entries: [] }
+    const data = { _entries: [] }
     for (let i =0; i < 50; i++) {
-        data.entries.push({
+        data._entries.push({
             "name": faker.random.word()
         })
     }
