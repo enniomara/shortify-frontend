@@ -19,6 +19,8 @@ jobs:
 
       - name: Build project
         run: make build
+        env:
+          SHORTIFY_ENDPOINT: https://sh.mara.se
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

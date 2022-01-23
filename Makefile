@@ -1,14 +1,18 @@
-.PHONY: shell start server build
+.PHONY: shell start server build index
 
 shell:
 	nix-shell --command zsh
 
-start:
-	elm-live src/Main.elm -- --debug --output elm.js
+start: index
+	elm-live src/Main.elm --dir dist -- --debug --output dist/elm.js
+
+index:
+	test -n "$(SHORTIFY_ENDPOINT)" # env missing
+	mkdir -p dist
+	sed 's|%API_ENDPOINT%|$(SHORTIFY_ENDPOINT)|' index.html > dist/index.html
 
 server:
 	json-server data.js
 
-build:
+build: index
 	elm make src/Main.elm --output dist/elm.js
-	cp index.html dist/index.html

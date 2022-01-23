@@ -6,13 +6,15 @@ import Html.Attributes exposing (autofocus, href)
 import Html.Events exposing (onInput)
 import Http
 import Json.Decode as D
+import Json.Encode as E
+import Url.Builder
 
 
 
 -- MAIN
 
 
-main : Program () Model Msg
+main : Program E.Value Model Msg
 main =
     Browser.element
         { init = init
@@ -32,7 +34,10 @@ subscriptions _ =
 
 
 type alias Model =
-    { items : Items, searchTerm : Maybe String }
+    { items : Items
+    , searchTerm : Maybe String
+    , config : Config
+    }
 
 
 type alias Item =
@@ -43,20 +48,35 @@ type alias Items =
     List Item
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( { items =
-            [ { name = "hn" }
-            , { name = "pomodoro" }
-            , { name = "shortify-gh" }
-            ]
-      , searchTerm = Nothing
-      }
-    , Http.get
-        { url = "http://localhost:3000/entries"
-        , expect = Http.expectJson LoadedItems itemsDecoder
-        }
-    )
+type alias Config =
+    { endpoint : String }
+
+
+init : E.Value -> ( Model, Cmd Msg )
+init flags =
+    case D.decodeValue configDecoder flags of
+        Ok config ->
+            ( { items =
+                    [ { name = "hn" }
+                    , { name = "pomodoro" }
+                    , { name = "shortify-gh" }
+                    ]
+              , searchTerm = Nothing
+              , config = config
+              }
+            , Http.get
+                { url = Url.Builder.crossOrigin config.endpoint [ "_entries" ] []
+                , expect = Http.expectJson LoadedItems itemsDecoder
+                }
+            )
+
+        Err status ->
+            Debug.todo <| D.errorToString status
+
+
+configDecoder : D.Decoder Config
+configDecoder =
+    D.map Config (D.field "endpoint" D.string)
 
 
 
