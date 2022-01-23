@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Config
-import Html exposing (Html, div, input, li, text, ul)
+import Html exposing (Html, div, input, li, span, text, ul)
 import Html.Attributes exposing (autofocus, href)
 import Html.Events exposing (onInput)
 import Http
@@ -35,10 +35,15 @@ subscriptions _ =
 
 
 type alias Model =
-    { items : Items
+    { items : Status Items
     , searchTerm : Maybe String
     , config : Config.Config
     }
+
+
+type Status a
+    = Loading
+    | Loaded a
 
 
 type alias Item =
@@ -53,7 +58,7 @@ init : E.Value -> ( Model, Cmd Msg )
 init flags =
     case Config.parseConfig flags of
         Ok config ->
-            ( { items = []
+            ( { items = Loading
               , searchTerm = Nothing
               , config = config
               }
@@ -90,7 +95,7 @@ update msg model =
         LoadedItems result ->
             case result of
                 Ok items ->
-                    ( { model | items = items }, Cmd.none )
+                    ( { model | items = Loaded items }, Cmd.none )
 
                 Err _ ->
                     Debug.todo "Handle error"
@@ -108,10 +113,15 @@ view model =
         ]
 
 
-renderItems : Items -> Maybe String -> String -> Html Msg
-renderItems items searchTerm endpoint =
-    ul []
-        (List.map (renderItem endpoint) (filter searchTerm items))
+renderItems : Status Items -> Maybe String -> String -> Html Msg
+renderItems statusItems searchTerm endpoint =
+    case statusItems of
+        Loading ->
+            div [] [ span [] [ text "Loading" ] ]
+
+        Loaded items ->
+            ul []
+                (List.map (renderItem endpoint) (filter searchTerm items))
 
 
 renderItem : String -> Item -> Html Msg
