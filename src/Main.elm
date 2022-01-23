@@ -65,7 +65,7 @@ init flags =
               , config = config
               }
             , Http.get
-                { url = Url.Builder.crossOrigin config.endpoint [ "entries" ] []
+                { url = Url.Builder.crossOrigin config.endpoint [ "_entries" ] []
                 , expect = Http.expectJson LoadedItems itemsDecoder
                 }
             )
