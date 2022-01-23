@@ -1,7 +1,6 @@
 module ConfigTest exposing (..)
 
 import Config
-import Dict exposing (Dict)
 import Expect
 import Json.Encode as E
 import Test exposing (..)

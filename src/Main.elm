@@ -49,17 +49,11 @@ type alias Items =
     List Item
 
 
-
 init : E.Value -> ( Model, Cmd Msg )
 init flags =
     case Config.parseConfig flags of
-        -- case D.decodeValue configDecoder flags of
         Ok config ->
-            ( { items =
-                    [ { name = "hn" }
-                    , { name = "pomodoro" }
-                    , { name = "shortify-gh" }
-                    ]
+            ( { items = []
               , searchTerm = Nothing
               , config = config
               }
@@ -110,21 +104,21 @@ view : Model -> Html Msg
 view model =
     div []
         [ input [ onInput SearchInputChange, autofocus True ] []
-        , renderItems model.items model.searchTerm
+        , renderItems model.items model.searchTerm (Config.endpoint model.config)
         ]
 
 
-renderItems : Items -> Maybe String -> Html Msg
-renderItems items searchTerm =
+renderItems : Items -> Maybe String -> String -> Html Msg
+renderItems items searchTerm endpoint =
     ul []
-        (List.map renderItem (filter searchTerm items))
+        (List.map (renderItem endpoint) (filter searchTerm items))
 
 
-renderItem : Item -> Html Msg
-renderItem item =
+renderItem : String -> Item -> Html Msg
+renderItem endpoint item =
     li []
         [ Html.a
-            [ href <| String.concat [ "https://sh.mara.se/", item.name ] ]
+            [ href <| String.concat [ endpoint, "/", item.name ] ]
             [ text item.name ]
         ]
 
