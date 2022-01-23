@@ -8,6 +8,7 @@ start: index
 
 index:
 	test -n "$(SHORTIFY_ENDPOINT)" # env missing
+	mkdir -p dist
 	sed 's|%API_ENDPOINT%|$(SHORTIFY_ENDPOINT)|' index.html > dist/index.html
 
 server:
