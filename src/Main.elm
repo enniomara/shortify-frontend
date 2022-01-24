@@ -145,6 +145,7 @@ renderItems statusItems searchTerm endpoint =
                 [ class "list-disc"
                 , class "list-inside"
                 , class "border"
+                , class "p-2"
                 ]
                 (List.map (renderItem endpoint) (filter searchTerm items))
 
