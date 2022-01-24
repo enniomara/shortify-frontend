@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Config
-import Html exposing (Html, div, h1, input, li, span, text, ul)
+import Html exposing (Html, a, div, h1, input, li, span, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Http
@@ -124,7 +124,7 @@ view model =
                 , class "text-center"
                 , class "p-5"
                 ]
-                [ text "Shortify" ]
+                [ a [ href "." ] [ text "Shortify" ] ]
             , input
                 [ class "border"
                 , class "text-lg"
