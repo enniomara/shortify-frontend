@@ -2,8 +2,8 @@ module Main exposing (..)
 
 import Browser
 import Config
-import Html exposing (Html, div, input, li, text, ul)
-import Html.Attributes exposing (autofocus, href)
+import Html exposing (Html, a, div, h1, input, li, span, text, ul)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Http
 import Json.Decode as D
@@ -35,10 +35,15 @@ subscriptions _ =
 
 
 type alias Model =
-    { items : Items
+    { items : Status Items
     , searchTerm : Maybe String
     , config : Config.Config
     }
+
+
+type Status a
+    = Loading
+    | Loaded a
 
 
 type alias Item =
@@ -53,7 +58,7 @@ init : E.Value -> ( Model, Cmd Msg )
 init flags =
     case Config.parseConfig flags of
         Ok config ->
-            ( { items = []
+            ( { items = Loading
               , searchTerm = Nothing
               , config = config
               }
@@ -90,7 +95,7 @@ update msg model =
         LoadedItems result ->
             case result of
                 Ok items ->
-                    ( { model | items = items }, Cmd.none )
+                    ( { model | items = Loaded items }, Cmd.none )
 
                 Err _ ->
                     Debug.todo "Handle error"
@@ -102,23 +107,61 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ input [ onInput SearchInputChange, autofocus True ] []
-        , renderItems model.items model.searchTerm (Config.endpoint model.config)
+    div
+        [ class "flex"
+        , class "justify-center"
+        ]
+        [ div
+            [ class "m-2"
+            , class "max-w-prose"
+            , class "flex-col"
+            , class "w-10/12"
+            , class "mt-36"
+            ]
+            [ h1
+                [ class "center"
+                , class "text-5xl"
+                , class "text-center"
+                , class "p-5"
+                ]
+                [ a [ href "." ] [ text "Shortify" ] ]
+            , input
+                [ class "border"
+                , class "text-lg"
+                , class "p-2"
+                , class "w-full"
+                , type_ "Text"
+                , placeholder "Enter search term"
+                , autofocus True
+                , onInput SearchInputChange
+                ]
+                []
+            , renderItems model.items model.searchTerm (Config.endpoint model.config)
+            ]
         ]
 
 
-renderItems : Items -> Maybe String -> String -> Html Msg
-renderItems items searchTerm endpoint =
-    ul []
-        (List.map (renderItem endpoint) (filter searchTerm items))
+renderItems : Status Items -> Maybe String -> String -> Html Msg
+renderItems statusItems searchTerm endpoint =
+    case statusItems of
+        Loading ->
+            div [] [ span [] [ text "Loading" ] ]
+
+        Loaded items ->
+            ul
+                [ class "list-disc"
+                , class "list-inside"
+                , class "border"
+                , class "p-2"
+                ]
+                (List.map (renderItem endpoint) (filter searchTerm items))
 
 
 renderItem : String -> Item -> Html Msg
 renderItem endpoint item =
     li []
         [ Html.a
-            [ href <| String.concat [ endpoint, "/", item.name ] ]
+            [ href <| String.concat [ endpoint, "/", item.name ], classList [ ( "underline", True ) ] ]
             [ text item.name ]
         ]
 
