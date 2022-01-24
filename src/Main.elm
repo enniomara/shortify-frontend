@@ -3,7 +3,7 @@ module Main exposing (..)
 import Browser
 import Config
 import Html exposing (Html, div, input, li, span, text, ul)
-import Html.Attributes exposing (autofocus, href)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Http
 import Json.Decode as D
@@ -107,9 +107,30 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ input [ onInput SearchInputChange, autofocus True ] []
-        , renderItems model.items model.searchTerm (Config.endpoint model.config)
+    div
+        [ class "flex"
+        , class "justify-center"
+        ]
+        [ div
+            [ class "m-2"
+            , class "max-w-prose"
+            , class "flex-col"
+            , class "w-10/12"
+            , class "mt-40"
+            ]
+            [ input
+                [ class "border"
+                , class "text-lg"
+                , class "p-2"
+                , class "w-full"
+                , type_ "Text"
+                , placeholder "Enter search term"
+                , autofocus True
+                , onInput SearchInputChange
+                ]
+                []
+            , renderItems model.items model.searchTerm (Config.endpoint model.config)
+            ]
         ]
 
 
@@ -120,7 +141,11 @@ renderItems statusItems searchTerm endpoint =
             div [] [ span [] [ text "Loading" ] ]
 
         Loaded items ->
-            ul []
+            ul
+                [ class "list-disc"
+                , class "list-inside"
+                , class "border"
+                ]
                 (List.map (renderItem endpoint) (filter searchTerm items))
 
 
@@ -128,7 +153,7 @@ renderItem : String -> Item -> Html Msg
 renderItem endpoint item =
     li []
         [ Html.a
-            [ href <| String.concat [ endpoint, "/", item.name ] ]
+            [ href <| String.concat [ endpoint, "/", item.name ], classList [ ( "underline", True ) ] ]
             [ text item.name ]
         ]
 
