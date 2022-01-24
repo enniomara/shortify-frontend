@@ -130,7 +130,7 @@ view model =
                 , class "text-lg"
                 , class "p-2"
                 , class "w-full"
-                , type_ "Text"
+                , type_ "text"
                 , placeholder "Enter search term"
                 , autofocus True
                 , onInput SearchInputChange
