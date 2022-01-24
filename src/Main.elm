@@ -1,13 +1,15 @@
 module Main exposing (..)
 
 import Browser
+import Browser.Navigation as Navigation
 import Config
 import Html exposing (Html, a, div, h1, input, li, span, text, ul)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onSubmit)
 import Http
 import Json.Decode as D
 import Json.Encode as E
+import List
 import Url.Builder
 
 
@@ -79,6 +81,7 @@ init flags =
 type Msg
     = SearchInputChange String
     | LoadedItems (Result Http.Error Items)
+    | RedirectFirstItem
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -99,6 +102,21 @@ update msg model =
 
                 Err _ ->
                     Debug.todo "Handle error"
+
+        RedirectFirstItem ->
+            case model.items of
+                Loading ->
+                    ( model, Cmd.none )
+
+                Loaded items ->
+                    case filter model.searchTerm items of
+                        item :: _ ->
+                            ( model
+                            , Navigation.load <| Config.endpoint model.config ++ "/" ++ item.name
+                            )
+
+                        [] ->
+                            Debug.todo "vafan"
 
 
 
@@ -125,17 +143,21 @@ view model =
                 , class "p-5"
                 ]
                 [ a [ href "." ] [ text "Shortify" ] ]
-            , input
-                [ class "border"
-                , class "text-lg"
-                , class "p-2"
-                , class "w-full"
-                , type_ "text"
-                , placeholder "Enter search term"
-                , autofocus True
-                , onInput SearchInputChange
+            , Html.form
+                [ onSubmit RedirectFirstItem
                 ]
-                []
+                [ input
+                    [ class "border"
+                    , class "text-lg"
+                    , class "p-2"
+                    , class "w-full"
+                    , type_ "text"
+                    , placeholder "Enter search term"
+                    , autofocus True
+                    , onInput SearchInputChange
+                    ]
+                    []
+                ]
             , renderItems model.items model.searchTerm (Config.endpoint model.config)
             ]
         ]
