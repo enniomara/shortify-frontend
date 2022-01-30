@@ -41,6 +41,16 @@ filterItems =
                         |> Main.filter (Just "re")
                         |> List.length
                         |> Expect.equal 2
+            , test "that filter is case insensitive wrt to needle" <|
+                \_ ->
+                    let
+                        items =
+                            [ Item "Response", Item "rest" ]
+                    in
+                    items
+                        |> Main.filter (Just "Re")
+                        |> List.length
+                        |> Expect.equal 2
             ]
         , describe "contains tests"
             [ test "should contain with empty needle" <|
