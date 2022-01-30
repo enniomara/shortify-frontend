@@ -204,7 +204,7 @@ filter searchTerm items =
 
 contains : String -> Item -> Bool
 contains searchTerm =
-    String.contains searchTerm << String.toLower << .name
+    String.contains (String.toLower searchTerm) << String.toLower << .name
 
 
 itemsDecoder : D.Decoder Items
